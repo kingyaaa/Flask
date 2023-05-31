@@ -1,7 +1,6 @@
 from flask import jsonify, request, session, render_template_string, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from . import auth
-from ..model.auth_user import User
 
 
 @auth.route('/test', methods=['GET'])
@@ -30,7 +29,9 @@ def login():
                 'code': 1011, 
                 'msg': 'post请求必须提供username和password'
                 })
-        user = User(username)
+        # user = User(username)
+        from ..model.auth_user import User
+        user = User.query.filter(User.name == username).first()
         # 返回用户实例
         if user:
             if username == user.username and password == user.password:
@@ -51,7 +52,7 @@ def login():
         """)
 
 @auth.route('/profile', methods=['GET','POST'])
-#@login_required
+@login_required
 def profile():
     return current_user.username + "登录成功"
 

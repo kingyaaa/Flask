@@ -1,3 +1,9 @@
+from flask_login import UserMixin
+from sqlalchemy import Table
+from app import database_connection_info
+
+connection_session, db_model, engine_metadata = database_connection_info()
+"""
 # 定义一个字典，存储用户的用户名和密码信息
 user_dict = {
     'null': {},
@@ -12,18 +18,13 @@ user_dict = {
         'password': 'password'
     }
 }
-
-class User(object):
+"""
+class User(db_model, UserMixin):
     """
     用户类
     """
-    def __init__(self, username='null'):
-        if username not in user_dict.keys():
-            username = 'null'
-        data = user_dict.get(username)
-        self.id = data.get('id')
-        self.username = data.get('username')
-        self.password = data.get('password')
+    __table__ = Table('user', engine_metadata, autoload=True)
+
     @property
     def is_authenticated(self):
         return True
@@ -38,16 +39,6 @@ class User(object):
 
     def __repr__(self):
         return '<User %r>' % self.username
-
-    """
-    函数： query
-    参数： 用户名
-    使用： 在加载用户时调用，返回用户实例/None
-    """
-    @staticmethod
-    def query(username):
-        if username is None: username = 'null'
-        return User(username)
 
     def get_id(self):
         return str(self.username)

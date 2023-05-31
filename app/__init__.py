@@ -5,7 +5,15 @@ from flask import Flask, jsonify, make_response
 from werkzeug.exceptions import HTTPException
 from flask_compress import Compress
 from .auth import lm
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.pool import QueuePool
+from sqlalchemy import MetaData
+from sqlalchemy import exc
+
 # from app.auth import auth
+
+db = SQLAlchemy(engine_options={"poolclass": QueuePool, 'pool_size': 200, 'max_overflow': 100, 'pool_recycle': 300})
+
 """
 *********
 参数：需要配置的参数类
@@ -19,6 +27,9 @@ def create_app(cfg):
 
     # 初始化压缩
     Compress(app=app)
+
+    # 实例化
+    db.init_app(app)
     from .auth import auth
     app.register_blueprint(auth, url_prefix='/auth')
     # 实例化访问控制
@@ -69,8 +80,22 @@ def init_response(app):
         # 查询用户信息，绑定到上下文
         from app.model.auth_user import User
         #try:
-        user = User().query(username)
+        #user = User().query(username)
         #except exc.StatementError:
         #    user = User().query(username)
+        try:
+            user = User.query.filter(User.name == username).first()
+        except exc.StatementError:
+            user = User.query.filter(User.name == username).first()
         return user 
+
+"""
+* 和数据库链接的基础信息
+"""
+def database_connection_info():
+    connection_session = db.session
+    db_model = db.Model
+    engine_metadata = MetaData(db.engine)
+    return connection_session, db_model, engine_metadata
+
 

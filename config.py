@@ -33,6 +33,8 @@ class BaseConfig(object):
     PID_PATH = os.path.join(BASE_PATH + "{}_{}.pid".format(APP_NAME, APP_PORT))
     LOG_NAME = "{}_{}.log".format(APP_NAME, APP_PORT)
 
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:mypassword@localhost:3306/flask_auth'
+
     @staticmethod
     def init_app(app):
         pass

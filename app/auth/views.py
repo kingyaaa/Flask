@@ -1,11 +1,11 @@
 from flask import jsonify, request, session, render_template_string, redirect, url_for
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from . import auth
 from ..model.auth_user import User
 
 
 @auth.route('/test', methods=['GET'])
-#@login_required
+@login_required
 def test():
     return jsonify({
         "message": "This is a test data for auth"    
@@ -53,10 +53,10 @@ def login():
 @auth.route('/profile', methods=['GET','POST'])
 #@login_required
 def profile():
-    return session['login_username'] + ": 登录成功"
+    return current_user.username + "登录成功"
 
 @auth.route('/logout',methods=['GET','POST'])
-#@login_required
+@login_required
 def logout():
     # 可以省略手动设置会话的步骤
     """

@@ -4,7 +4,7 @@
 from flask import Flask, jsonify, make_response
 from werkzeug.exceptions import HTTPException
 from flask_compress import Compress
-# from app.auth import lm
+from .auth import lm
 # from app.auth import auth
 """
 *********
@@ -22,7 +22,7 @@ def create_app(cfg):
     from .auth import auth
     app.register_blueprint(auth, url_prefix='/auth')
     # 实例化访问控制
-    #lm.init_app(app)
+    lm.init_app(app)
     # 初始化响应
     init_response(app)
 
@@ -62,7 +62,7 @@ def init_response(app):
     @app.errorhandler(500)
     def method_is_not_allowed(e):
         return make_response(jsonify({'code': 500, 'message': '内部错误', 'status': 'error'}), 500)
-    '''
+    
     # Flask_login的回调函数
     @lm.user_loader
     def load_user(username):
@@ -73,4 +73,4 @@ def init_response(app):
         #except exc.StatementError:
         #    user = User().query(username)
         return user 
-    '''
+

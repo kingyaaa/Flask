@@ -1,7 +1,6 @@
 from flask_login import UserMixin
 from sqlalchemy import Table
-from app import database_connection_info
-
+from app import database_connection_info, db
 connection_session, db_model, engine_metadata = database_connection_info()
 """
 # 定义一个字典，存储用户的用户名和密码信息
@@ -19,11 +18,11 @@ user_dict = {
     }
 }
 """
-class User(db_model, UserMixin):
+class User(db.Model, UserMixin):
     """
     用户类
     """
-    __table__ = Table('user', engine_metadata, autoload=True)
+    __table__ = Table('user', engine_metadata, autoload_with=db.engine)
 
     @property
     def is_authenticated(self):
@@ -38,7 +37,7 @@ class User(db_model, UserMixin):
         return False
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.name
 
     def get_id(self):
-        return str(self.username)
+        return str(self.name)

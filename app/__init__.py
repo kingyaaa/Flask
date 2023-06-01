@@ -7,20 +7,21 @@ from flask_compress import Compress
 from .auth import lm
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.pool import QueuePool
-from sqlalchemy import MetaData
+from sqlalchemy.schema import MetaData
 from sqlalchemy import exc
 
 # from app.auth import auth
 
-db = SQLAlchemy(engine_options={"poolclass": QueuePool, 'pool_size': 200, 'max_overflow': 100, 'pool_recycle': 300})
+# db = SQLAlchemy(engine_options={"poolclass": QueuePool, 'pool_size': 200, 'max_overflow': 100, 'pool_recycle': 300})
+db = SQLAlchemy()
 
-"""
-*********
-参数：需要配置的参数类
-方法：配置参数类,设置压缩,实例化相应,返回Flask实例
-*********
-"""
 def create_app(cfg):
+    """
+    *********
+    参数：需要配置的参数类
+    方法：配置参数类,设置压缩,实例化相应,返回Flask实例
+    *********
+    """
     # app = Flask(__name__, template_folder=cfg.TEMPLATES_PATH, static_url_path='/', static_folder=cfg.STATIC_PATH)
     app = Flask(__name__)
     app.config.from_object(cfg)
@@ -95,7 +96,7 @@ def init_response(app):
 def database_connection_info():
     connection_session = db.session
     db_model = db.Model
-    engine_metadata = MetaData(db.engine)
+    engine_metadata = MetaData()
     return connection_session, db_model, engine_metadata
 
 

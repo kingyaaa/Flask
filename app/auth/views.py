@@ -34,7 +34,7 @@ def login():
         user = User.query.filter(User.name == username).first()
         # 返回用户实例
         if user:
-            if username == user.username and password == user.password:
+            if username == user.name and password == user.password:
                 #session['is_login'] = True
                 #session['login_username'] = username
                 # 增加loginmanager管理，注册用户信息
@@ -54,7 +54,7 @@ def login():
 @auth.route('/profile', methods=['GET','POST'])
 @login_required
 def profile():
-    return current_user.username + "登录成功"
+    return current_user.name + "登录成功"
 
 @auth.route('/logout',methods=['GET','POST'])
 @login_required

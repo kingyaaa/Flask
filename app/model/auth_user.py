@@ -41,3 +41,19 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return str(self.name)
+
+    def add_user(self, register_form):
+        """
+        新增用户
+        param: register_form: 注册表单数据
+        return: 用户实例
+        """
+        user = User(
+            name=register_form.username.data,
+            password=register_form.password.data,
+            real_name=register_form.real_name.data,
+            email=register_form.email.data
+        )
+        connection_session.add(user)
+        connection_session.commit()
+        return user

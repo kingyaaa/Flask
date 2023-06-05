@@ -1,7 +1,7 @@
 from flask import jsonify, request, session, render_template_string, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from . import auth
-
+from .forms import RegisterUserForm
 
 @auth.route('/test', methods=['GET'])
 @login_required
@@ -67,3 +67,28 @@ def logout():
     """
     logout_user()
     return redirect(url_for('auth.login'))
+
+@auth.route('/register', methods=['GET','POST'])
+def register():
+    """
+    注册用户
+    """
+    form = RegisterUserForm()
+    if form.validate_on_submit():
+        from ..model.auth_user import User
+        user = User().add_user(form) # todo
+        if user:
+            return redirect(url_for('auth.login'))
+        return jsonify({
+            'code': 1013,
+            'msg': '新增用户失败'
+        })
+    else:
+        return render_template_string(
+            """
+            <p>已有帐号？ 
+                <a href="{{url_for('auth.login')}}">点击登录</a>
+            </p>
+            """,
+            form=form
+        )

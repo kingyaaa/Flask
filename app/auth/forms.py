@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import Form, StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, Email, Regexp, EqualTo, InputRequired, Length, email_validator
+from flask import request
 
 class RegisterUserForm(FlaskForm):
     """
@@ -26,3 +27,34 @@ class RegisterUserForm(FlaskForm):
         check = User.query.filter_by(account=calv.data).first()
         if check:
             raise ValidationError("账号已经存在")
+
+class BaseForm(Form):
+    def __init__(self):
+        data = request.get_json()
+        args = request.args.to_dict()
+        super(BaseForm, self).__init__(data=data, **args)
+    
+    def validate_for_api(self):
+        valid = super(BaseForm, self).validate()
+        if not valid:
+            raise ValidationError()
+        return self
+
+class UserForm(BaseForm):
+    username = StringField('Username', validators=[Length(max=64)])
+    password = PasswordField('Password', validators=[Length(8,16)])
+        
+    def get_user(self):
+        from ..model.auth_user import User
+        user = User.query.filter(User.name == self.username.data).first()
+        return user
+    
+    def validate_username(self, field):
+        if not self.get_user():
+            raise ValidationError('Invalid username!')
+    
+    def validate_password(self, field):
+        if not self.get_user():
+            return 
+        if not self.get_user().check_password(field.data):
+            raise ValidationError('Incorrect password!')

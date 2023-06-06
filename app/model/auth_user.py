@@ -1,3 +1,4 @@
+from operator import truediv
 from flask_login import UserMixin
 from sqlalchemy import Table
 from app import database_connection_info, db
@@ -41,6 +42,11 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return str(self.name)
+    
+    def check_password(self, password):
+        if password == str(self.password):
+            return password
+        return None
 
     def add_user(self, register_form):
         """

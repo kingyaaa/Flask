@@ -1,7 +1,8 @@
 from flask import jsonify, request, session, render_template_string, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from . import auth
-from .forms import RegisterUserForm
+import json
+from .forms import UserForm, RegisterUserForm
 
 @auth.route('/test', methods=['GET'])
 @login_required
@@ -14,12 +15,40 @@ def test():
 def hello():
     return 'Hello, Auth!'
 
-"""
-函数:   登录
-返回值: 登录成功的用户信息路由或错误信息
-"""
+@auth.route('/remote-login',methods=['POST'])
+def remote_login():
+    """
+    后端的表单校验：用户校验、密码校验
+    return: success或error的json, 前端处理json
+    """
+    data = request.get_json()
+    print(data)
+    #user_data = json.dumps(data)
+    #user_data_dict = json.loads(user_data)
+    #print(user_data_dict)
+
+    
+    form = UserForm().validate_for_api()
+    if form:
+        user = form.get_user()
+        print(user)
+        #login_user(user=user)
+        return jsonify({
+            'status': 'success',
+            #'user': user.to_json()
+        }), 200
+    return jsonify({
+        'status': 'error',
+        #'message': form.errors
+    }), 403
+
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    函数:   登录
+    返回值: 登录成功的用户信息路由或错误信息
+    """
     if request.method == 'POST':
         data = request.form
         username = data.get('username')
@@ -73,6 +102,7 @@ def register():
     """
     注册用户
     """
+
     form = RegisterUserForm()
     if form.validate_on_submit():
         from ..model.auth_user import User

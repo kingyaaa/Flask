@@ -1,7 +1,6 @@
 from flask import jsonify, request, session, render_template_string, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from . import auth
-import json
 from .forms import UserForm, RegisterUserForm
 
 @auth.route('/test', methods=['GET'])

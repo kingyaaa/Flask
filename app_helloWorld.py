@@ -13,29 +13,6 @@ app = create_app(cfg)
 def hello():
     return 'Hello, Flask!'
 
-@app.route('/add', methods=['GET','POST'])
-def add_xy():
-    try:
-        z = request.form.to_dict()
-        x = int(z['x'])
-        y = int(z['y'])
-        re = x + y
-    except Exception as e:
-        print(str(e))
-        re = ''
-    return jsonify({'result': re})
-
-
-@app.route('/message', methods=['POST'])
-def convert():
-    message = request.json.get('msg')
-    
-    completion = msg2msg(message)
-    
-    return jsonify({
-        'msg': completion
-        })
-
 
 if __name__ == '__main__':
     # 允许服务器被公开访问

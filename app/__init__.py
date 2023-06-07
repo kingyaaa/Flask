@@ -10,6 +10,8 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy.schema import MetaData
 from sqlalchemy import exc
 
+from .resources import init_api
+
 # from app.auth import auth
 
 # db = SQLAlchemy(engine_options={"poolclass": QueuePool, 'pool_size': 200, 'max_overflow': 100, 'pool_recycle': 300})
@@ -35,6 +37,8 @@ def create_app(cfg):
     app.register_blueprint(auth, url_prefix='/auth')
     # 实例化访问控制
     lm.init_app(app)
+    # 初始化api资源
+    init_api(app)
     # 初始化响应
     init_response(app)
 

@@ -15,8 +15,11 @@ user_parser.add_argument('password', help='Password cannot be None', required=Tr
 class UserRegistration(Resource):
     def post(self):
         data = user_parser.parse_args()
-        
+        #检查输入的字符串格式
+        #检查username是否已存在
         form = RegisterUserForm().validate_for_api()
+        from ..model.auth_user import User
+        user = User().add_user(form)
         
         return {'message': 'User registration'}
 
@@ -44,7 +47,9 @@ class AllUsers(Resource):
     获取已注册用户列表(only for test)
     '''
     def get(self):
-        return {'message': 'List of users'}
+        from ..model.auth_user import User
+        return User.query_all()
+        #return {'message': 'List of users'}
 
     def delete(self):
         return {'message': 'Delete all users'}

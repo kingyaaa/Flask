@@ -32,8 +32,17 @@ class RegisterUserForm(BaseForm):
     password = PasswordField(label="密码", validators=[InputRequired()])
     #前端验证
     '''
-    username = StringField('Username', validators=[Length(8,64)])
+    username = StringField('Username', validators=[Length(4,64)])
     password = PasswordField('Password', validators=[Length(8,16)])
+    
+    def get_user(self):
+        from ..model.auth_user import User
+        user = User.query.filter(User.name == self.username.data).first()
+        return user
+    
+    def validate_username(self, field):
+        if self.get_user():
+            raise ValidationError('User existed!')
     
 
 class UserForm(BaseForm):
@@ -54,5 +63,9 @@ class UserForm(BaseForm):
     def validate_password(self, field):
         if not self.get_user():
             return 
-        if not self.get_user().check_password(field.data):
+        #from ..model.auth_user import User        
+        verify = self.get_user().check_password(self.password.data)
+        if not verify:
             raise ValidationError('Incorrect password!')
+         
+        

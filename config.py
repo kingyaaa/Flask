@@ -17,6 +17,7 @@ class BaseConfig(object):
     APP_SALT = os.environ.get('APP_SALT') or 'secure_key'
     #WTF_CSRF_SECRET_KEY = SECRET_KEY
     WTF_CSRF_ENABLED = False
+    JWT_SECRET_KEY = 'jwt-secret_string'
     JSON_AS_ASCII = False
     # 定义静态目录的位置
     BASE_PATH = os.path.abspath(os.path.dirname(__file__))

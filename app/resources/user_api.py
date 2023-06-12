@@ -7,6 +7,7 @@ from app.libs.error_code import ParameterException
 from ..auth.forms import UserForm, RegisterUserForm
 from flask import jsonify
 from wtforms.validators import ValidationError
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, get_jwt_identity, get_jwt)
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument('username', help='Username cannot be None', required=True)
@@ -20,26 +21,28 @@ class UserRegistration(Resource):
         form = RegisterUserForm().validate_for_api()
         from ..model.auth_user import User
         user = User().add_user(form)
-        
-        return {'message': 'User registration'}
+        access_token = create_access_token(identity=data['username'])
+        refresh_token = create_refresh_token(identity=data['username'])
+        return {
+            'message': 'User registration',
+            'access_token': access_token,
+            'refresh_token': refresh_token
+        }
 
 class UserLogin(Resource):
     def post(self):
         data = user_parser.parse_args()
         # 表单验证，在form.validate中检查用户和密码
-        try:
-            form = UserForm().validate_for_api()
-        except ValidationError as e:
-            return jsonify({
-                'status': 'error',
-                'message': "User not existed"
-            })
+        form = UserForm().validate_for_api()
         # 获取数据库中的用户信息
         #user = form.get_user()
-        return jsonify({
-            'status': 'success',
-            'message': 'user login'
-        })
+        access_token = create_access_token(identity=data['username'])
+        refresh_token = create_refresh_token(identity=data['username'])
+        return {
+            'message': 'User registration',
+            'access_token': access_token,
+            'refresh_token': refresh_token
+        }
         
 
 class AllUsers(Resource):
@@ -54,6 +57,10 @@ class AllUsers(Resource):
     def delete(self):
         return {'message': 'Delete all users'}
 
+# 用refresh_token来刷新access_token
 class TokenRefresh(Resource):
+    @jwt_required(refresh=True)
     def post(self):
+        current_user = get_jwt_identity()
+        access_token = create_access_token(identity=current_user)
         return {'message': 'Token refresh'}

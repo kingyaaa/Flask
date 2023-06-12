@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.schema import MetaData
 from sqlalchemy import exc
-
+from flask_jwt_extended import JWTManager
 from .resources import init_api
 
 # from app.auth import auth
@@ -39,6 +39,7 @@ def create_app(cfg):
     lm.init_app(app)
     # 初始化api资源
     init_api(app)
+    jwt = JWTManager(app)
     # 初始化响应
     init_response(app)
 

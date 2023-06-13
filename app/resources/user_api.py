@@ -39,7 +39,7 @@ class UserLogin(Resource):
         access_token = create_access_token(identity=data['username'])
         refresh_token = create_refresh_token(identity=data['username'])
         return {
-            'message': 'User registration',
+            'message': 'User login',
             'access_token': access_token,
             'refresh_token': refresh_token
         }

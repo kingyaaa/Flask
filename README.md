@@ -9,10 +9,10 @@
     - forms.py #表单验证
     - views.py #视图文件,已被弃用,新的路由在resources中定义      
   - libs 
-	- error.py #定义异常处理对象
+    - error.py #定义异常处理对象
     - error_code.py #自定义异常逻辑处理
   - model #存储数据库
-	- auth_user.py #管理用户信息的数据库
+    - auth_user.py #管理用户信息的数据库
   - resources
     - __init__.py   
     - user_api.py #处理Api接口的后端逻辑

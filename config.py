@@ -35,7 +35,13 @@ class BaseConfig(object):
     PID_PATH = os.path.join(BASE_PATH + "{}_{}.pid".format(APP_NAME, APP_PORT))
     LOG_NAME = "{}_{}.log".format(APP_NAME, APP_PORT)
 
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:mypassword@localhost:3306/flask_auth'
+    # 在容器化部署时，修改数据库的配置信息
+    # root:用户名
+    # windyword2023:密码
+    # localhost:3303 <----- mysql容器 mysql-test:3306的映射
+    # test_user：数据库名称
+    #SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:mypassword@localhost:3306/flask_auth'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:windyword2023@mysql:3306/user_test?charset=utf8mb4'
 
     @staticmethod
     def init_app(app):

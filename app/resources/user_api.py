@@ -21,12 +21,13 @@ class UserRegistration(Resource):
         form = RegisterUserForm().validate_for_api()
         from ..model.auth_user import User
         user = User().add_user(form)
-        access_token = create_access_token(identity=data['username'])
-        refresh_token = create_refresh_token(identity=data['username'])
+        #access_token = create_access_token(identity=data['username'])
+        #refresh_token = create_refresh_token(identity=data['username'])
+        # 注册之后转到登录界面，登录成功之后再分发token
         return {
-            'message': 'User registration',
-            'access_token': access_token,
-            'refresh_token': refresh_token
+            'message': 'User registration'
+            #'access_token': access_token,
+            #'refresh_token': refresh_token
         }
 
 class UserLogin(Resource):
@@ -57,6 +58,7 @@ class AllUsers(Resource):
     def delete(self):
         return {'message': 'Delete all users'}
 
+
 # 用refresh_token来刷新access_token
 class TokenRefresh(Resource):
     @jwt_required(refresh=True)
@@ -64,3 +66,7 @@ class TokenRefresh(Resource):
         current_user = get_jwt_identity()
         access_token = create_access_token(identity=current_user)
         return {'message': 'Token refresh'}
+
+class TestAPI(Resource):
+    def get(self):
+        return {'message': 'test for docker deploy...'}

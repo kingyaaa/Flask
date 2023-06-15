@@ -122,7 +122,9 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:windyword2023@mysql:3306/user_te
 
 设定`url`为：`https://windyword.com/testflask/`
 
-**成功的访问界面**
 
-![image-20230614162049156](../AppData/Roaming/Typora/typora-user-images/image-20230614162049156.png)
+
+
+
+
 

@@ -122,7 +122,13 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:windyword2023@mysql:3306/user_te
 
 设定`url`为：`https://windyword.com/testflask/`
 
+目前可访问的接口：
 
+users:GET请求，获取所有的用户名和加密的密码，仅作为测试使用
+
+registration:POST请求，注册用户名和密码，后端有表单验证、密码加密和异常处理
+
+login:POST请求，登录用户，后端有表单验证和异常处理
 
 
 
